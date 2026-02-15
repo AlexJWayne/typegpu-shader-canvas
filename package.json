@@ -1,25 +1,33 @@
 {
   "name": "typegpu-shader-canvas",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
+  "version": "0.1.0",
+  "description": "A simple WebGPU shader canvas powered by TypeGPU",
+  "license": "MIT",
+  "author": "Alex Wayne",
   "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@webgpu/types": "^0.1.69",
+    "typegpu": "^0.9.0",
+    "unplugin-typegpu": "^0.9.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@webgpu/types": "^0.1.69",
     "prettier": "^3.8.1",
+    "typegpu": "^0.9.0",
     "typescript": "^5.9.3",
     "unplugin-typegpu": "^0.9.0",
     "vite": "^7.3.1"
-  },
-  "dependencies": {
-    "typegpu": "^0.9.0"
   }
 }

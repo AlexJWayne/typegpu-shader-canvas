@@ -5,8 +5,10 @@ import { ProvidedUniforms } from './provided-uniforms'
 
 export const FragmentParameters = struct({
   uv: vec2f,
+  xy: vec2f,
   ...ProvidedUniforms.propTypes,
 })
+export type FragmentParameters = Infer<typeof FragmentParameters>
 
 export function createFragmentShader(
   fragmentShaderImplementation: (
@@ -18,10 +20,14 @@ export function createFragmentShader(
     in: { uv: vec2f },
     out: { color: vec4f },
   })(({ uv }) => {
+    // Calculate pixel coordinates from clip space coordinates
+    const xy = uv.add(vec2f(1, 1)).mul(providedUniforms.$.resolution).mul(0.5)
+
     return {
       color: fragmentShaderImplementation(
         FragmentParameters({
           uv,
+          xy,
           time: providedUniforms.$.time,
           mouse: providedUniforms.$.mouse,
           resolution: providedUniforms.$.resolution,
