@@ -1,31 +1,13 @@
 import tgpu, { type TgpuBufferReadonly } from 'typegpu'
-import {
-  type Infer,
-  arrayOf,
-  builtin,
-  f32,
-  struct,
-  type v4f,
-  vec2f,
-  vec4f,
-} from 'typegpu/data'
+import { type Infer, type v4f, vec2f } from 'typegpu/data'
+
+import { FragmentParameters, createFragmentShader } from './fragment-shader'
+import { trackMouse } from './mouse'
+import { ProvidedUniforms } from './provided-uniforms'
+import { createVertexShader, quadVertices } from './vertex-shader'
 
 const root = await tgpu.init()
 const presentationFormat = navigator.gpu.getPreferredCanvasFormat()
-
-const Mouse = struct({
-  xy: vec2f,
-  uv: vec2f,
-})
-const ProvidedUniforms = struct({
-  time: f32,
-  mouse: Mouse,
-})
-
-const FragmentParameters = struct({
-  uv: vec2f,
-  ...ProvidedUniforms.propTypes,
-})
 
 export function createShaderCanvas(
   canvas: HTMLElement | undefined | null,
@@ -33,11 +15,10 @@ export function createShaderCanvas(
     fragmentParameters: Infer<typeof FragmentParameters>,
   ) => v4f,
 ) {
+  validateCanvas(canvas)
   const ctx = getCtx(canvas)
-
-  const providedUniformsBuffer = root
-    .createBuffer(ProvidedUniforms)
-    .$usage('storage')
+  const providedUniformsBuffer = createProvidedUniformsBuffer(canvas)
+  trackMouse(canvas, providedUniformsBuffer)
 
   const drawPipeline = createPipeline(
     fragmentShaderImplementation,
@@ -45,11 +26,8 @@ export function createShaderCanvas(
   )
 
   function render() {
-    if (!ctx) throw new Error('WebGPU context is not available')
-
-    providedUniformsBuffer.write({
+    providedUniformsBuffer.writePartial({
       time: performance.now() / 1000,
-      mouse: Mouse({ xy: vec2f(), uv: vec2f() }),
     })
 
     drawPipeline(ctx)
@@ -96,29 +74,9 @@ function createPipeline(
   }
 }
 
-function createFragmentShader(
-  fragmentShaderImplementation: (
-    fragmentParameters: Infer<typeof FragmentParameters>,
-  ) => v4f,
-  providedUniforms: TgpuBufferReadonly<typeof ProvidedUniforms>,
-) {
-  return tgpu['~unstable'].fragmentFn({
-    in: { uv: vec2f },
-    out: { color: vec4f },
-  })(({ uv }) => {
-    return {
-      color: fragmentShaderImplementation(
-        FragmentParameters({
-          uv,
-          time: providedUniforms.$.time,
-          mouse: providedUniforms.$.mouse,
-        }),
-      ),
-    }
-  })
-}
-
-function getCtx(canvas: HTMLElement | undefined | null): GPUCanvasContext {
+function validateCanvas(
+  canvas: HTMLElement | null | undefined,
+): asserts canvas is HTMLCanvasElement {
   if (!canvas)
     throw new Error(
       `Canvas element is ${canvas === null ? 'null' : 'undefined'}`,
@@ -128,7 +86,9 @@ function getCtx(canvas: HTMLElement | undefined | null): GPUCanvasContext {
     throw new Error(
       `Canvas must be an HTMLCanvasElement. got ${canvas === null ? 'null' : 'undefined'}`,
     )
+}
 
+function getCtx(canvas: HTMLCanvasElement): GPUCanvasContext {
   const ctx = canvas.getContext('webgpu')
   if (!ctx) throw new Error('Failed to get webgpu context')
 
@@ -141,27 +101,15 @@ function getCtx(canvas: HTMLElement | undefined | null): GPUCanvasContext {
   return ctx
 }
 
-const quadVertices = tgpu.const(arrayOf(vec2f, 6), [
-  vec2f(-1, -1),
-  vec2f(-1, 1),
-  vec2f(1, 1),
-  vec2f(1, 1),
-  vec2f(1, -1),
-  vec2f(-1, -1),
-])
+function createProvidedUniformsBuffer(canvas: HTMLCanvasElement) {
+  const providedUniformsBuffer = root
+    .createBuffer(ProvidedUniforms)
+    .$usage('storage')
 
-function createVertexShader() {
-  return tgpu['~unstable'].vertexFn({
-    in: { idx: builtin.vertexIndex },
-    out: {
-      clipPos: builtin.position,
-      uv: vec2f,
-    },
-  })(({ idx }) => {
-    const vertex = quadVertices.$[idx]!
-    return {
-      clipPos: vec4f(vertex, 0, 1),
-      uv: vertex,
-    }
+  providedUniformsBuffer.writePartial({
+    resolution: vec2f(canvas.clientWidth, canvas.clientHeight),
+    aspectRatio: canvas.clientWidth / canvas.clientHeight,
   })
+
+  return providedUniformsBuffer
 }
