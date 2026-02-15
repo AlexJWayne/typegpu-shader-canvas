@@ -4,6 +4,11 @@
   "description": "A simple WebGPU shader canvas powered by TypeGPU",
   "license": "MIT",
   "author": "Alex Wayne",
+  "homepage": "https://github.com/AlexJWayne/typegpu-shader-canvas",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlexJWayne/typegpu-shader-canvas.git"
+  },
   "type": "module",
   "main": "./src/index.ts",
   "exports": {
