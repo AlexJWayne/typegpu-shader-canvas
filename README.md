@@ -1,6 +1,6 @@
 # typegpu-shader-canvas
 
-This library makes it easy to render TypeScript based fragment shaders directly to a web based canvas element through a WebGPU pipeline. This is made possible by the amazing [TypeGPU](https://typegpu.com) library.
+This library makes it easy to render TypeScript-based fragment shaders directly to a web-based canvas element through a WebGPU pipeline. This is made possible by the amazing [TypeGPU](https://typegpu.com) library.
 
 - 🚫 No setting up a WebGPU device or pipeline
 - 🚫 No need to render triangle geometry
@@ -10,10 +10,12 @@ This library makes it easy to render TypeScript based fragment shaders directly 
 
 ## Features
 
-- 🖱️ Mouse event handling for both position and clicked buttons, including off canvas tracking.
-- 📐 Use `uv` (clip space) or `xy` (pixels) based coordinates.
+- 🖱️ Mouse event handling for position and left click state, including off-canvas tracking.
+- 📐 Use `uv` (clip-space) or `xy` (pixel) coordinates.
 - 🔄 Automatically start animating in a render loop.
 
+
+**Note:** This library requires a browser with [WebGPU support](https://caniuse.com/webgpu).
 
 ## Installation
 
@@ -24,7 +26,7 @@ npm install --save-dev unplugin-typegpu
 
 ### Build Plugin
 
-Your build pipeline **must** include [`unplugin-typegpu`](https://docs.swmansion.com/TypeGPU/tooling/unplugin-typegpu/). This is what allows your shader to be compiled to WebGPU and WGSL.
+Your build pipeline **must** include [`unplugin-typegpu`](https://docs.swmansion.com/TypeGPU/tooling/unplugin-typegpu/). This is what allows your shader to be compiled to WGSL for the WebGPU pipeline.
 
 
 #### Vite example
@@ -41,14 +43,11 @@ export default defineConfig({
 
 ## Usage
 
-- Simply call `createShaderCanvas(canvas, fragmentShader)`
-- Pass a reference to a `canvas` element, 
-- Pass a [typegpu shader function](https://docs.swmansion.com/TypeGPU/fundamentals/functions/) that returns a `vec4f`.
-- The returned vector has 4 components interpreted as `r, g, b, alpha`.
+Call `createShaderCanvas(canvas, fragmentShader)` with a reference to a `canvas` element and a [TypeGPU shader function](https://docs.swmansion.com/TypeGPU/fundamentals/functions/) that returns a `vec4f`. The returned vector has 4 components interpreted as `r, g, b, alpha`.
 
 This gives you a shader canvas object. Call `startRendering()` to start continuous rendering, or call `render()` to render one frame.
 
-### Example.
+### Example
 
 ```ts
 import { vec3f, vec4f } from 'typegpu/data'
@@ -84,7 +83,7 @@ Creates a WebGPU shader canvas that renders a fragment shader to the given `<can
 **Returns** an object with:
 
 - `startRendering()` — start a rendering loop with `requestAnimationFrame`.
-- `render()` — renders a single frame. Use this if you want implement you own rendering trigger.
+- `render()` — renders a single frame. Use this if you want to implement your own rendering trigger.
 
 ### `FragmentParameters`
 
@@ -107,3 +106,8 @@ The struct passed to your fragment shader function, with these fields:
 | `uv`     | `vec2f` | Position in clip-space (-1 to 1)           |
 | `isOver` | `i32`   | 1 if the mouse is over the canvas, else 0  |
 | `down`   | `i32`   | 1 if the left mouse button is down, else 0 |
+
+## Notes
+
+- This module uses top-level `await` for WebGPU initialization, so it must be imported as an ES module.
+- Cleanup and teardown support is planned for the near future. At the moment the mouse handling event listeners live forever.
