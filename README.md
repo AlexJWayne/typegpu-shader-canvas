@@ -18,12 +18,13 @@ This library makes it easy to render TypeScript based fragment shaders directly 
 ## Installation
 
 ```bash
-npm install typegpu-shader-canvas typegpu unplugin-typegpu
+npm install typegpu-shader-canvas typegpu
+npm install --save-dev unplugin-typegpu
 ```
 
 ### Build Plugin
 
-Your build pipeline **must** include [`unplugin-typegpu`](https://docs.swmansion.com/TypeGPU/tooling/unplugin-typegpu/) — This is what allows your shader to be compiled to WebGPU's WGSL.
+Your build pipeline **must** include [`unplugin-typegpu`](https://docs.swmansion.com/TypeGPU/tooling/unplugin-typegpu/). This is what allows your shader to be compiled to WebGPU and WGSL.
 
 
 #### Vite example
