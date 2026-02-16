@@ -111,3 +111,13 @@ The struct passed to your fragment shader function, with these fields:
 
 - This module uses top-level `await` for WebGPU initialization, so it must be imported as an ES module.
 - Cleanup and teardown support is planned for the near future. At the moment the mouse handling event listeners live forever.
+
+
+## TODO
+
+- [x] Mouse tracking
+- [ ] Implement cleanup and teardown support
+- [ ] Easier declaration of a custom data buffer
+- [ ] Performance reporting
+- [ ] More examples
+- [ ] Hosted examples
