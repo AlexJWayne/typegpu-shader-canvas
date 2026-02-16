@@ -1,6 +1,6 @@
 # typegpu-shader-canvas
 
-This library makes it easy to render TypeScript based fragment shaders directly to a web based canvas element. This is made possible by the amazing [TypeGPU](https://typegpu.com) library.
+This library makes it easy to render TypeScript based fragment shaders directly to a web based canvas element through a WebGPU pipeline. This is made possible by the amazing [TypeGPU](https://typegpu.com) library.
 
 - 🚫 No setting up a WebGPU device or pipeline
 - 🚫 No need to render triangle geometry
@@ -18,19 +18,7 @@ This library makes it easy to render TypeScript based fragment shaders directly 
 ## Installation
 
 ```bash
-npm install typegpu-shader-canvas
-```
-
-### WebGPU Types
-
-Your `tsconfig.json` **must** include [`@webgpu/types`](https://docs.swmansion.com/TypeGPU/getting-started/) so TypeScript recognizes WebGPU globals:
-
-```json
-{
-  "compilerOptions": {
-    "types": ["@webgpu/types"]
-  }
-}
+npm install typegpu-shader-canvas typegpu unplugin-typegpu
 ```
 
 ### Build Plugin
@@ -51,6 +39,15 @@ export default defineConfig({
 ```
 
 ## Usage
+
+- Simply call `createShaderCanvas(canvas, fragmentShader)`
+- Pass a reference to a `canvas` element, 
+- Pass a [typegpu shader function](https://docs.swmansion.com/TypeGPU/fundamentals/functions/) that returns a `vec4f`.
+- The returned vector has 4 components interpreted as `r, g, b, alpha`.
+
+This gives you a shader canvas object. Call `startRendering()` to start continuous rendering, or call `render()` to render one frame.
+
+### Example.
 
 ```ts
 import { vec3f, vec4f } from 'typegpu/data'

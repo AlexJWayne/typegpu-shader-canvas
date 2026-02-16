@@ -6,7 +6,7 @@
     "module": "Preserve",
     "target": "ES2024",
     "moduleResolution": "bundler",
-    "types": ["@webgpu/types"],
+    "types": ["@webgpu/types", "node"],
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,

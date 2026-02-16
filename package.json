@@ -10,29 +10,35 @@
     "url": "https://github.com/AlexJWayne/typegpu-shader-canvas.git"
   },
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
-    "dev": "vite",
+    "build": "vite build",
+    "dev": "vite --config vite.config.examples.ts",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@webgpu/types": "^0.1.69",
     "typegpu": "^0.9.0",
     "unplugin-typegpu": "^0.9.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/node": "^25.2.3",
     "@webgpu/types": "^0.1.69",
     "prettier": "^3.8.1",
     "typegpu": "^0.9.0",
     "typescript": "^5.9.3",
     "unplugin-typegpu": "^0.9.0",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.3"
   }
 }
