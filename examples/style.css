@@ -24,6 +24,35 @@ h1 {
   color: #7dd3fc;
 }
 
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  background: #1a1a2e;
+  color: #8996a3;
+  border: 1px solid #2a2a4e;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-family: monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab:hover {
+  background: #252545;
+  color: #e0e0e0;
+}
+
+.tab.active {
+  background: #2a2a5e;
+  color: #7dd3fc;
+  border-color: #7dd3fc;
+}
+
 #code {
   background: #1a1a2e;
   color: #e0e0e0;
