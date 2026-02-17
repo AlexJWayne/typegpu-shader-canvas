@@ -125,3 +125,4 @@ The struct passed to your fragment shader function, with these fields:
 - [ ] Performance reporting
 - [ ] More examples
 - [x] Hosted examples
+- [ ] Better handling when WebGPU is not supported
