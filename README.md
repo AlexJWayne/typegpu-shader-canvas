@@ -49,6 +49,8 @@ This gives you a shader canvas object. Call `startRendering()` to start continuo
 
 ### Example
 
+[Live example](https://alexjwayne.github.io/typegpu-shader-canvas/)
+
 ```ts
 import { vec3f, vec4f } from 'typegpu/data'
 import { mix, sin } from 'typegpu/std'
@@ -122,4 +124,4 @@ The struct passed to your fragment shader function, with these fields:
 - [ ] Easier declaration of a custom data buffer
 - [ ] Performance reporting
 - [ ] More examples
-- [ ] Hosted examples
+- [x] Hosted examples
