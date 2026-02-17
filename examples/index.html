@@ -1,61 +1,17 @@
 <!doctype html>
 <html>
-  <body
-    style="
-      background-color: #111;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 40px 20px;
-      box-sizing: border-box;
-      font-family: monospace;
-    "
-  >
-    <h1 style="color: #e0e0e0; margin: 0 0 10px">
-      typegpu-shader-canvas Example
-    </h1>
-    <p style="color: #8996a3; margin: 0 0 20px">
-      <a
-        href="https://www.npmjs.com/package/typegpu-shader-canvas"
-        style="color: #7dd3fc"
-        >npm</a
-      >
-      &middot;
-      <a
-        href="https://github.com/AlexJWayne/typegpu-shader-canvas"
-        style="color: #7dd3fc"
-        >GitHub</a
-      >
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>typegpu-shader-canvas Example</h1>
+    <p class="links">
+      <a href="https://www.npmjs.com/package/typegpu-shader-canvas">npm</a>
+      |
+      <a href="https://github.com/AlexJWayne/typegpu-shader-canvas">GitHub</a>
     </p>
     <canvas id="canvas" width="800" height="600"></canvas>
-    <pre
-      id="code"
-      style="
-        background: #1a1a2e;
-        color: #e0e0e0;
-        padding: 20px;
-        border-radius: 8px;
-        max-width: 800px;
-        width: 100%;
-        box-sizing: border-box;
-        margin-top: 20px;
-        overflow-x: auto;
-        font-size: 14px;
-        line-height: 1.5;
-        --sh-class: #e879f9;
-        --sh-identifier: #e0e0e0;
-        --sh-sign: #8996a3;
-        --sh-property: #7dd3fc;
-        --sh-entity: #f9a8d4;
-        --sh-jsxliterals: #9abdf5;
-        --sh-string: #a5d6a7;
-        --sh-keyword: #c792ea;
-        --sh-comment: #6b7280;
-        --sh-break: #e0e0e0;
-      "
-    ></pre>
+    <pre id="code"></pre>
     <script type="module" src="./index.ts"></script>
   </body>
 </html>
