@@ -1,7 +1,7 @@
 import { sdDisk } from '@typegpu/sdf'
 import { createShaderCanvas } from 'typegpu-shader-canvas'
-import { f32, vec2f, vec3f, vec4f } from 'typegpu/data'
-import { abs, length, select, sin, smoothstep } from 'typegpu/std'
+import { vec2f, vec3f, vec4f } from 'typegpu/data'
+import { abs, length, smoothstep } from 'typegpu/std'
 
 export function runExample() {
   function stroke(sdf: number, width: number) {
@@ -16,18 +16,24 @@ export function runExample() {
 
   const shaderCanvas = createShaderCanvas(
     document.getElementById('canvas'),
-    ({ uv, time, mouse, aspectRatio }) => {
+    ({ uv, mouse, aspectRatio }) => {
       'use gpu'
 
       let color = vec3f()
 
       let aspectUv = uv.div(vec2f(1, aspectRatio))
-      let outerCircle = sdDisk(vec2f(aspectUv), 0.5)
+      let aspectMouseUv = mouse.uv.div(vec2f(1, aspectRatio))
+
+      let outerCircle = sdDisk(aspectUv, 0.7)
       color = color.add(stroke(outerCircle, 0.01))
 
-      let aspectMouseUv = mouse.uv.div(vec2f(1, aspectRatio))
-      let innerCircle = sdDisk(aspectUv.sub(aspectMouseUv), 0.2)
+      let mouseDistance = length(aspectMouseUv)
+      let lookAtOffset = aspectMouseUv.div(1 + mouseDistance * 2)
+      let innerCircle = sdDisk(aspectUv.sub(lookAtOffset), 0.2)
       color = color.add(fill(innerCircle))
+
+      let pupil = sdDisk(aspectUv.sub(lookAtOffset), 0.08)
+      color = color.sub(fill(pupil))
 
       return vec4f(color, 1)
     },
