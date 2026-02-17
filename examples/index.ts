@@ -37,6 +37,8 @@ function activate(name: string) {
       (tab as HTMLElement).dataset.example === name,
     )
   }
+
+  window.location.hash = name
 }
 
 tabsEl.addEventListener('click', (e) => {
@@ -46,4 +48,5 @@ tabsEl.addEventListener('click', (e) => {
   if (name) activate(name)
 })
 
-activate('rgb-waves')
+const initialExample = window.location.hash.slice(1) || 'rgb-waves'
+activate(examples[initialExample] ? initialExample : 'rgb-waves')
