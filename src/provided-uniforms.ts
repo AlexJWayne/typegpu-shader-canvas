@@ -14,6 +14,14 @@ export const Mouse = struct({
   down: i32,
 })
 
+export const Aspect = struct({
+  /** The aspect ratio of the canvas (width / height) */
+  ratio: f32,
+
+  /** The UV coordinates corrected for aspect ratio */
+  uv: vec2f,
+})
+
 export const ProvidedUniforms = struct({
   /** Elapsed time since page load, in seconds */
   time: f32,

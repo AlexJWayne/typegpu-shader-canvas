@@ -1,12 +1,23 @@
 import tgpu, { type TgpuBufferReadonly } from 'typegpu'
-import { type Infer, struct, type v4f, vec2f, vec4f } from 'typegpu/data'
+import { type Infer, f32, struct, type v4f, vec2f, vec4f } from 'typegpu/data'
 
-import { ProvidedUniforms } from './provided-uniforms'
+import { Aspect, Mouse, ProvidedUniforms } from './provided-uniforms'
+
+const FragmentMouse = struct({
+  ...Mouse.propTypes,
+
+  /** The mouse UV coordinates corrected for aspect ratio */
+  aspectUV: vec2f,
+})
+
+const { aspectRatio: _, mouse: __, ...providedPropTypes } = ProvidedUniforms.propTypes
 
 export const FragmentParameters = struct({
   uv: vec2f,
   xy: vec2f,
-  ...ProvidedUniforms.propTypes,
+  ...providedPropTypes,
+  mouse: FragmentMouse,
+  aspect: Aspect,
 })
 export type FragmentParameters = Infer<typeof FragmentParameters>
 
@@ -29,9 +40,18 @@ export function createFragmentShader(
           uv,
           xy,
           time: providedUniforms.$.time,
-          mouse: providedUniforms.$.mouse,
+          mouse: FragmentMouse({
+            xy: providedUniforms.$.mouse.xy,
+            uv: providedUniforms.$.mouse.uv,
+            isOver: providedUniforms.$.mouse.isOver,
+            down: providedUniforms.$.mouse.down,
+            aspectUV: providedUniforms.$.mouse.uv.div(vec2f(1, providedUniforms.$.aspectRatio)),
+          }),
           resolution: providedUniforms.$.resolution,
-          aspectRatio: providedUniforms.$.aspectRatio,
+          aspect: Aspect({
+            ratio: providedUniforms.$.aspectRatio,
+            uv: uv.div(vec2f(1, providedUniforms.$.aspectRatio)),
+          }),
         }),
       ),
     }

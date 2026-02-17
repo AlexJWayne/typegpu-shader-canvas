@@ -93,23 +93,31 @@ Creates a WebGPU shader canvas that renders a fragment shader to the given `<can
 
 The struct passed to your fragment shader function, with these fields:
 
-| Field         | Type    | Description                                  |
-| ------------- | ------- | -------------------------------------------- |
-| `uv`          | `vec2f` | Clip-space coordinates (-1 to 1)             |
-| `xy`          | `vec2f` | Pixel coordinates                            |
-| `time`        | `f32`   | Elapsed time in seconds since page load      |
-| `mouse`       | `Mouse` | Mouse state (see below)                      |
-| `resolution`  | `vec2f` | Canvas resolution in pixels                  |
-| `aspectRatio` | `f32`   | Canvas aspect ratio (width / height)         |
+| Field        | Type     | Description                                     |
+| ------------ | -------- | ----------------------------------------------- |
+| `uv`         | `vec2f`  | Clip-space coordinates (-1 to 1)                |
+| `xy`         | `vec2f`  | Pixel coordinates                               |
+| `time`       | `f32`    | Elapsed time in seconds since page load         |
+| `mouse`      | `Mouse`  | Mouse state (see below)                         |
+| `resolution` | `vec2f`  | Canvas resolution in pixels                     |
+| `aspect`     | `Aspect` | Aspect ratio info (see below)                   |
+
+#### `Aspect`
+
+| Field        | Type     | Description                                     |
+| ------------ | -------- | ----------------------------------------------- |
+| `ratio`      | `f32`    | Canvas aspect ratio (width / height)            |
+| `uv`         | `vec2f`  | UV coordinates corrected for aspect ratio       |
 
 #### `Mouse`
 
-| Field    | Type    | Description                                |
-| -------- | ------- | ------------------------------------------ |
-| `xy`     | `vec2f` | Position in pixels on the canvas           |
-| `uv`     | `vec2f` | Position in clip-space (-1 to 1)           |
-| `isOver` | `i32`   | 1 if the mouse is over the canvas, else 0  |
-| `down`   | `i32`   | 1 if the left mouse button is down, else 0 |
+| Field        | Type     | Description                                     |
+| ------------ | -------- | ----------------------------------------------- |
+| `xy`         | `vec2f`  | Position in pixels on the canvas                |
+| `uv`         | `vec2f`  | Position in clip-space (-1 to 1)                |
+| `aspectUV`   | `vec2f`  | Mouse UV coordinates corrected for aspect ratio |
+| `isOver`     | `i32`    | 1 if the mouse is over the canvas, else 0       |
+| `down`       | `i32`    | 1 if the left mouse button is down, else 0      |
 
 ## Notes
 
@@ -126,3 +134,4 @@ The struct passed to your fragment shader function, with these fields:
 - [ ] More examples
 - [x] Hosted examples
 - [ ] Better handling when WebGPU is not supported
+- [x] Provide aspect ratio correct UV coordinates.

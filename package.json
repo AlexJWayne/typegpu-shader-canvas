@@ -1,6 +1,6 @@
 {
   "name": "typegpu-shader-canvas",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A simple WebGPU shader canvas powered by TypeGPU",
   "license": "MIT",
   "author": "Alex Wayne",
