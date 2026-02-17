@@ -4,6 +4,7 @@ import { type Infer, type v4f, vec2f } from 'typegpu/data'
 import { FragmentParameters, createFragmentShader } from './fragment-shader'
 import { trackMouse } from './mouse'
 import { ProvidedUniforms } from './provided-uniforms'
+import { createRenderLoop } from './render-loop'
 import { createVertexShader, quadVertices } from './vertex-shader'
 
 const root = await tgpu.init()
@@ -14,11 +15,23 @@ export function createShaderCanvas(
   fragmentShaderImplementation: (
     fragmentParameters: Infer<typeof FragmentParameters>,
   ) => v4f,
-) {
+): {
+  /** Renders the shader canvas once. */
+  render(): void
+
+  /** Starts rendering the shader canvas continuously. */
+  startRendering(): void
+
+  /** Stops rendering the shader continuosly. */
+  stopRendering(): void
+
+  /** Disposes of the shader canvas resources and event handlers. */
+  dispose(): void
+} {
   validateCanvas(canvas)
   const ctx = getCtx(canvas)
   const providedUniformsBuffer = createProvidedUniformsBuffer(canvas)
-  trackMouse(canvas, providedUniformsBuffer)
+  const untrackMouse = trackMouse(canvas, providedUniformsBuffer)
 
   const drawPipeline = createPipeline(
     fragmentShaderImplementation,
@@ -26,22 +39,19 @@ export function createShaderCanvas(
   )
 
   function render() {
-    providedUniformsBuffer.writePartial({
-      time: performance.now() / 1000,
-    })
-
+    const time = performance.now() / 1000
+    providedUniformsBuffer.writePartial({ time })
     drawPipeline(ctx)
   }
 
-  function renderWithRequestAnimationFrame() {
-    render()
-    requestAnimationFrame(renderWithRequestAnimationFrame)
+  const { startRendering, stopRendering } = createRenderLoop(render)
+
+  function dispose() {
+    stopRendering()
+    untrackMouse()
   }
 
-  return {
-    render,
-    startRendering: renderWithRequestAnimationFrame,
-  }
+  return { render, startRendering, stopRendering, dispose }
 }
 
 function createPipeline(

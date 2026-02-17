@@ -82,8 +82,10 @@ Creates a WebGPU shader canvas that renders a fragment shader to the given `<can
 
 **Returns** an object with:
 
-- `startRendering()` — start a rendering loop with `requestAnimationFrame`.
 - `render()` — renders a single frame. Use this if you want to implement your own rendering trigger.
+- `startRendering()` — start a continuous rendering loop with `requestAnimationFrame`.
+- `stopRendering()` — stop the continuous rendering loop.
+- `dispose()` — stop rendering and clean up all resources and event listeners.
 
 ### `FragmentParameters`
 
@@ -110,13 +112,13 @@ The struct passed to your fragment shader function, with these fields:
 ## Notes
 
 - This module uses top-level `await` for WebGPU initialization, so it must be imported as an ES module.
-- Cleanup and teardown support is planned for the near future. At the moment the mouse handling event listeners live forever.
+- Call `dispose()` when you're done with a shader canvas to stop rendering and remove event listeners.
 
 
 ## TODO
 
 - [x] Mouse tracking
-- [ ] Implement cleanup and teardown support
+- [x] Implement cleanup and teardown support
 - [ ] Easier declaration of a custom data buffer
 - [ ] Performance reporting
 - [ ] More examples

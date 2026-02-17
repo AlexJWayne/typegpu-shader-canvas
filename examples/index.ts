@@ -1,7 +1,6 @@
+import { createShaderCanvas } from 'typegpu-shader-canvas'
 import { f32, vec2f, vec3f, vec4f } from 'typegpu/data'
 import { abs, length, select, sin, smoothstep } from 'typegpu/std'
-
-import { createShaderCanvas } from 'typegpu-shader-canvas'
 
 createShaderCanvas(
   document.getElementById('canvas'),

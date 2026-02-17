@@ -24,7 +24,7 @@ function getMouseDown(event: MouseEvent): 0 | 1 {
 export function trackMouse(
   canvas: HTMLElement,
   providedUniforms: TgpuBuffer<typeof ProvidedUniforms>,
-): void {
+): () => void {
   function handleMouseEvent(event: MouseEvent) {
     const rect = canvas.getBoundingClientRect()
     const xy = getXY(event, rect)
@@ -42,4 +42,10 @@ export function trackMouse(
   document.addEventListener('mousemove', handleMouseEvent)
   canvas.addEventListener('mousedown', handleMouseEvent)
   canvas.addEventListener('mouseup', handleMouseEvent)
+
+  return function untrackMouse() {
+    document.removeEventListener('mousemove', handleMouseEvent)
+    canvas.removeEventListener('mousedown', handleMouseEvent)
+    canvas.removeEventListener('mouseup', handleMouseEvent)
+  }
 }
