@@ -35,6 +35,7 @@
     "@types/node": "^25.2.3",
     "@webgpu/types": "^0.1.69",
     "prettier": "^3.8.1",
+    "sugar-high": "^0.9.5",
     "typegpu": "^0.9.0",
     "typescript": "^5.9.3",
     "unplugin-typegpu": "^0.9.0",
