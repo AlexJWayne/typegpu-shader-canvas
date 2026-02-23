@@ -11,7 +11,7 @@ This library makes it easy to render TypeScript-based fragment shaders directly 
 ## Features
 
 - 🖱️ Mouse event handling for position and left click state, including off-canvas tracking.
-- 📐 Use `uv` (clip-space) or `xy` (pixel) coordinates.
+- 📐 Rich coordinate space variables: pixel coords, UV (0–1), centered UV (−1–1), and aspect-corrected variants.
 - 🔄 Automatically start animating in a render loop.
 
 
@@ -47,9 +47,9 @@ Call `createShaderCanvas(canvas, fragmentShader)` with a reference to a `canvas`
 
 This gives you a shader canvas object. Call `startRendering()` to start continuous rendering, or call `render()` to render one frame.
 
-### Example
+### Examples
 
-[Live example](https://alexjwayne.github.io/typegpu-shader-canvas/)
+[Live examples](https://alexjwayne.github.io/typegpu-shader-canvas/)
 
 ```ts
 import { vec3f, vec4f } from 'typegpu/data'
@@ -58,13 +58,13 @@ import { createShaderCanvas } from 'typegpu-shader-canvas'
 
 createShaderCanvas(
   document.getElementById('canvas'),
-  ({ uv, time }) => {
+  ({ uvCentered, time }) => {
     'use gpu'
 
     const color = mix(
       vec3f(1, 0, 0),
       vec3f(0, 0, 1),
-      sin(time + uv.x) * 0.5 + 0.5
+      sin(time + uvCentered.x) * 0.5 + 0.5
     )
     return vec4f(color, 1)
   },
@@ -93,31 +93,29 @@ Creates a WebGPU shader canvas that renders a fragment shader to the given `<can
 
 The struct passed to your fragment shader function, with these fields:
 
-| Field        | Type     | Description                                     |
-| ------------ | -------- | ----------------------------------------------- |
-| `uv`         | `vec2f`  | Clip-space coordinates (-1 to 1)                |
-| `xy`         | `vec2f`  | Pixel coordinates                               |
-| `time`       | `f32`    | Elapsed time in seconds since page load         |
-| `mouse`      | `Mouse`  | Mouse state (see below)                         |
-| `resolution` | `vec2f`  | Canvas resolution in pixels                     |
-| `aspect`     | `Aspect` | Aspect ratio info (see below)                   |
-
-#### `Aspect`
-
-| Field        | Type     | Description                                     |
-| ------------ | -------- | ----------------------------------------------- |
-| `ratio`      | `f32`    | Canvas aspect ratio (width / height)            |
-| `uv`         | `vec2f`  | UV coordinates corrected for aspect ratio       |
+| Field                | Type    | Description                                                         |
+| -------------------- | ------- | ------------------------------------------------------------------- |
+| `pixelPos`           | `vec2f` | Pixel coordinates of the fragment                                   |
+| `uv`                 | `vec2f` | UV coordinates (0,0 = bottom-left, 1,1 = top-right)                 |
+| `uvCentered`         | `vec2f` | UV centered at origin (−1,−1 = bottom-left, 1,1 = top-right)        |
+| `uvAspect`           | `vec2f` | Aspect-corrected UV (0,0 = bottom-left, X,1 = top-right)            |
+| `uvCenteredAspect`   | `vec2f` | Aspect-corrected centered UV (−X,−1 = bottom-left, X,1 = top-right) |
+| `resolution`         | `vec2f` | Canvas resolution in pixels                                         |
+| `aspectRatio`        | `f32`   | Canvas aspect ratio (width / height)                                |
+| `time`               | `f32`   | Elapsed time in seconds since page load                             |
+| `mouse`              | `Mouse` | Mouse state (see below)                                             |
 
 #### `Mouse`
 
-| Field        | Type     | Description                                     |
-| ------------ | -------- | ----------------------------------------------- |
-| `xy`         | `vec2f`  | Position in pixels on the canvas                |
-| `uv`         | `vec2f`  | Position in clip-space (-1 to 1)                |
-| `aspectUV`   | `vec2f`  | Mouse UV coordinates corrected for aspect ratio |
-| `isOver`     | `i32`    | 1 if the mouse is over the canvas, else 0       |
-| `down`       | `i32`    | 1 if the left mouse button is down, else 0      |
+| Field                | Type    | Description                                                         |
+| -------------------- | ------- | ------------------------------------------------------------------- |
+| `pixelPos`           | `vec2f` | Position in pixels on the canvas                                    |
+| `uv`                 | `vec2f` | Position as UV (0,0 = bottom-left, 1,1 = top-right)                 |
+| `uvCentered`         | `vec2f` | Position as centered UV (−1,−1 = bottom-left, 1,1 = top-right)      |
+| `uvAspect`           | `vec2f` | Aspect-corrected UV position                                        |
+| `uvCenteredAspect`   | `vec2f` | Aspect-corrected centered UV position                               |
+| `isOver`             | `i32`   | 1 if the mouse is over the canvas, else 0                           |
+| `down`               | `i32`   | 1 if the left mouse button is down, else 0                          |
 
 ## Notes
 
