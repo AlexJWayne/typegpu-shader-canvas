@@ -1,11 +1,11 @@
 import tgpu, { type TgpuBufferReadonly } from 'typegpu'
+import { fullScreenTriangle } from 'typegpu/common'
 import { type Infer, type v4f, vec2f } from 'typegpu/data'
 
 import { FragmentParameters, createFragmentShader } from './fragment-shader'
 import { trackMouse } from './mouse'
 import { ProvidedUniforms } from './provided-uniforms'
 import { createRenderLoop } from './render-loop'
-import { createVertexShader, quadVertices } from './vertex-shader'
 
 const root = await tgpu.init()
 const presentationFormat = navigator.gpu.getPreferredCanvasFormat()
@@ -61,7 +61,7 @@ function createPipeline(
   providedUniformsBuffer: TgpuBufferReadonly<typeof ProvidedUniforms>,
 ) {
   const pipeline = root['~unstable']
-    .withVertex(createVertexShader())
+    .withVertex(fullScreenTriangle)
     .withFragment(
       createFragmentShader(
         fragmentShaderImplementation,
@@ -80,7 +80,7 @@ function createPipeline(
           storeOp: 'store',
         },
       })
-      .draw(quadVertices.$.length, 1)
+      .draw(3)
   }
 }
 
@@ -94,7 +94,7 @@ function validateCanvas(
 
   if (!(canvas instanceof HTMLCanvasElement))
     throw new Error(
-      `Canvas must be an HTMLCanvasElement. got ${canvas === null ? 'null' : 'undefined'}`,
+      `Canvas must be an HTMLCanvasElement. got ${canvas.tagName.toLowerCase()}`,
     )
 }
 

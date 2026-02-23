@@ -1,5 +1,7 @@
 import { highlight } from 'sugar-high'
 
+import { runExample as runGrid } from './grid'
+import gridSource from './grid.ts?raw'
 import { runExample as runLookAt } from './look-at'
 import lookAtSource from './look-at.ts?raw'
 import { runExample as runRgbWaves } from './rgb-waves'
@@ -9,6 +11,7 @@ const examples: Record<string, { run(): { dispose(): void }; source: string }> =
   {
     'rgb-waves': { run: runRgbWaves, source: rgbWavesSource },
     'look-at': { run: runLookAt, source: lookAtSource },
+    grid: { run: runGrid, source: gridSource },
   }
 
 const codeEl = document.getElementById('code')!

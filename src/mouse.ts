@@ -1,19 +1,20 @@
 import type { TgpuBuffer } from 'typegpu'
 import { type v2f, vec2f } from 'typegpu/data'
 
-import { Mouse, ProvidedUniforms } from './provided-uniforms'
+import { createCoordinateStruct } from './coordinate-space'
+import { Mouse, type ProvidedUniforms } from './provided-uniforms'
 
 function getXY(event: MouseEvent, rect: DOMRect): v2f {
-  return vec2f(event.clientX - rect.left, -(event.clientY - rect.top))
+  return vec2f(event.clientX - rect.left, event.clientY - rect.top)
 }
 
-function getUV(rect: DOMRect, xy: v2f): v2f {
-  return xy.div(vec2f(rect.width, rect.height)).mul(2).sub(vec2f(1, -1))
+function getUV(rect: DOMRect, pixelPos: v2f): v2f {
+  return pixelPos.div(vec2f(rect.width, rect.height))
 }
 
 function getIsOver(rect: DOMRect, xy: v2f): 0 | 1 {
   const inX = xy.x >= 0 && xy.x <= rect.width
-  const inY = xy.y <= 0 && xy.y >= -rect.height
+  const inY = xy.y >= 0 && xy.y <= rect.height
   return inX && inY ? 1 : 0
 }
 
@@ -27,13 +28,22 @@ export function trackMouse(
 ): () => void {
   function handleMouseEvent(event: MouseEvent) {
     const rect = canvas.getBoundingClientRect()
-    const xy = getXY(event, rect)
+    const pixelPos = getXY(event, rect)
+
+    const mouseCoordinate = createCoordinateStruct(
+      getUV(rect, pixelPos),
+      vec2f(rect.width, rect.height),
+    )
 
     providedUniforms.writePartial({
       mouse: Mouse({
-        xy,
-        uv: getUV(rect, xy),
-        isOver: getIsOver(rect, xy),
+        pixelPos: mouseCoordinate.pixelPos,
+        uv: mouseCoordinate.uv,
+        uvCentered: mouseCoordinate.uvCentered,
+        uvAspect: mouseCoordinate.uvAspect,
+        uvCenteredAspect: mouseCoordinate.uvCenteredAspect,
+
+        isOver: getIsOver(rect, pixelPos),
         down: getMouseDown(event),
       }),
     })
