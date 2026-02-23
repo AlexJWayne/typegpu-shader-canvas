@@ -1,16 +1,8 @@
 import tgpu, { type TgpuBufferReadonly } from 'typegpu'
-import {
-  type Infer,
-  f32,
-  struct,
-  type v2f,
-  type v4f,
-  vec2f,
-  vec4f,
-} from 'typegpu/data'
+import { type Infer, struct, type v4f, vec2f, vec4f } from 'typegpu/data'
 
 import { Coordinate, createCoordinateStruct } from './coordinate-space'
-import { Mouse, ProvidedUniforms } from './provided-uniforms'
+import { ProvidedUniforms } from './provided-uniforms'
 
 export const FragmentParameters = struct({
   ...Coordinate.propTypes,
