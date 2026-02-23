@@ -1,5 +1,7 @@
 # typegpu-shader-canvas
 
+NOTE: This API is experimental and may change drastically until the 1.0 release
+
 This library makes it easy to render TypeScript-based fragment shaders directly to a web-based canvas element through a WebGPU pipeline. This is made possible by the amazing [TypeGPU](https://typegpu.com) library.
 
 - 🚫 No setting up a WebGPU device or pipeline
