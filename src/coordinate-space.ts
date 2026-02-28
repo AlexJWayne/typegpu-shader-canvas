@@ -1,4 +1,5 @@
-import { struct, type v2f, vec2f } from 'typegpu/data'
+import tgpu from 'typegpu'
+import { f32, struct, type v2f, vec2f } from 'typegpu/data'
 
 export const Coordinate = struct({
   /** The pixel coordinates of the fragment */
@@ -17,10 +18,11 @@ export const Coordinate = struct({
   uvAspect: vec2f,
 })
 
-export function createCoordinateStruct(uv: v2f, resolution: v2f) {
-  'use gpu'
-
-  let pixelPos = flipY(uv.mul(resolution), resolution.y)
+export const createCoordinateStruct = tgpu.fn(
+  [vec2f, vec2f],
+  Coordinate,
+)((uv: v2f, resolution: v2f) => {
+  const pixelPos = flipY(uv.mul(resolution), resolution.y)
   const aspectScalar = vec2f(resolution.x / resolution.y, 1)
   const flippedUV = flipY(uv, 1)
   const uvCentered = flippedUV.mul(2).sub(1)
@@ -32,9 +34,9 @@ export function createCoordinateStruct(uv: v2f, resolution: v2f) {
     uvCenteredAspect: uvCentered.mul(aspectScalar),
     uvAspect: flippedUV.mul(aspectScalar),
   })
-}
+})
 
-function flipY(p: v2f, yMax: number) {
-  'use gpu'
-  return vec2f(p.x, yMax - p.y)
-}
+const flipY = tgpu.fn(
+  [vec2f, f32],
+  vec2f,
+)((p: v2f, yMax: number) => vec2f(p.x, yMax - p.y))
