@@ -11,7 +11,7 @@ export default defineConfig({
       fileName: 'index',
     },
     rollupOptions: {
-      external: ['typegpu', 'typegpu/data'],
+      external: ['typegpu', 'typegpu/data', 'typegpu/common'],
     },
   },
 })
