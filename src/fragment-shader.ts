@@ -16,7 +16,7 @@ export function createFragmentShader(
   ) => v4f,
   providedUniforms: TgpuBufferReadonly<typeof ProvidedUniforms>,
 ) {
-  return tgpu['~unstable'].fragmentFn({
+  return tgpu.fragmentFn({
     in: { uv: vec2f },
     out: { color: vec4f },
   })(({ uv }) => {

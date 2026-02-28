@@ -2,7 +2,10 @@ import tgpu, { type TgpuBufferReadonly } from 'typegpu'
 import { fullScreenTriangle } from 'typegpu/common'
 import { type Infer, type v4f, vec2f } from 'typegpu/data'
 
-import { FragmentParameters, createFragmentShader } from './fragment-shader'
+import {
+  type FragmentParameters,
+  createFragmentShader,
+} from './fragment-shader'
 import { trackMouse } from './mouse'
 import { ProvidedUniforms } from './provided-uniforms'
 import { createRenderLoop } from './render-loop'
@@ -60,16 +63,14 @@ function createPipeline(
   ) => v4f,
   providedUniformsBuffer: TgpuBufferReadonly<typeof ProvidedUniforms>,
 ) {
-  const pipeline = root['~unstable']
-    .withVertex(fullScreenTriangle)
-    .withFragment(
-      createFragmentShader(
-        fragmentShaderImplementation,
-        providedUniformsBuffer,
-      ),
-      { color: { format: presentationFormat } },
-    )
-    .createPipeline()
+  const pipeline = root.createRenderPipeline({
+    vertex: fullScreenTriangle,
+    fragment: createFragmentShader(
+      fragmentShaderImplementation,
+      providedUniformsBuffer,
+    ),
+    targets: { color: { format: presentationFormat } },
+  })
 
   return function drawPipeline(ctx: GPUCanvasContext) {
     pipeline
